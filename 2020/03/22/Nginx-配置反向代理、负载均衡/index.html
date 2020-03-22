@@ -19,11 +19,12 @@
     <link rel="dns-prefetch" href="http://yoursite.com">
     <!--SEO-->
 
-<meta name="keywords" content="Nginx,Docker" />
+<meta name="keywords" content="Nginx" />
 
 
-<meta name="description" content="1.安装Nginx镜像1docker pull nginx
-2.创建nginx.conf配置文件1234567891011121314151617181920212223242526272829..." />
+<meta name="description" content="1.反向代理配置
+在nginx.conf配置server块添加proxy_pass属性指定代理的地址
+location / 支持正则匹配eg:location ~ /edu/ 匹配包含edu的请..." />
 
 
 <meta name="robots" content="all" />
@@ -34,7 +35,7 @@
 
 <title>
     
-    Docker 部署 Nginx |
+    Nginx 配置反向代理、负载均衡 |
     
     张白告的个人博客
 </title>
@@ -124,9 +125,9 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="Docker 部署 Nginx">
+        <h1 id="Nginx 配置反向代理、负载均衡">
             
-            Docker 部署 Nginx
+            Nginx 配置反向代理、负载均衡
             
         </h1>
         <div class="post-meta">
@@ -141,7 +142,7 @@
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="/tags/Docker/" rel="tag">Docker</a> <a class="tag-link" href="/tags/Nginx/" rel="tag">Nginx</a>
+            <a class="tag-link" href="/tags/Nginx/" rel="tag">Nginx</a>
             
         </span>
     </span>
@@ -166,20 +167,26 @@
     </div>
     
     <div class="post-body post-content">
-        <h2 id="1-安装Nginx镜像"><a href="#1-安装Nginx镜像" class="headerlink" title="1.安装Nginx镜像"></a>1.安装Nginx镜像</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nginx</span><br></pre></td></tr></table></figure>
-<h2 id="2-创建nginx-conf配置文件"><a href="#2-创建nginx-conf配置文件" class="headerlink" title="2.创建nginx.conf配置文件"></a>2.创建nginx.conf配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application&#x2F;octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line">    #gzip  on;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        # Vue路由模式为history需添加的配置</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            if (!-e $request_filename) &#123;</span><br><span class="line">                rewrite ^(.*)$ &#x2F;index.html?s&#x3D;$1 last;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            root   &#x2F;home&#x2F;nginx&#x2F;www;</span><br><span class="line">            index  index.html;</span><br><span class="line">        &#125;</span><br><span class="line">        # 获取真实IP以及Websocket需添加的配置</span><br><span class="line">        proxy_set_header Host $host;</span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header REMOTE-HOST $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_set_header Upgrade $http_upgrade;</span><br><span class="line">        proxy_set_header Connection &quot;upgrade&quot;;</span><br><span class="line">        # 客户端Body大小限制（文件上传大小限制配置）</span><br><span class="line">        client_max_body_size 5m;</span><br><span class="line">        error_page   500 502 503 504 404  &#x2F;50x.html;</span><br><span class="line">        location &#x3D; &#x2F;50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="3-创建Nginx容器"><a href="#3-创建Nginx容器" class="headerlink" title="3.创建Nginx容器"></a>3.创建Nginx容器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -d --name nginx -p 81:80 \</span><br><span class="line">-v &#x2F;home&#x2F;nginx&#x2F;conf&#x2F;nginx.conf:&#x2F;etc&#x2F;nginx&#x2F;nginx.conf \</span><br><span class="line">-v &#x2F;home&#x2F;nginx&#x2F;logs:&#x2F;var&#x2F;log&#x2F;nginx \</span><br><span class="line">-v &#x2F;home&#x2F;nginx&#x2F;www:&#x2F;home&#x2F;nginx&#x2F;www nginx</span><br></pre></td></tr></table></figure>
-<ul>
-<li>/home/nginx/conf/nginx.conf  为刚才创建配置文件的路径</li>
-<li>/home/nginx/logs         日志保存的位置</li>
-<li>/home/nginx/www          跳转静态资源位置</li>
+        <h2 id="1-反向代理配置"><a href="#1-反向代理配置" class="headerlink" title="1.反向代理配置"></a>1.反向代理配置</h2><ul>
+<li>在nginx.conf配置server块添加proxy_pass属性指定代理的地址</li>
+<li>location / 支持正则匹配eg:location ~ /edu/ 匹配包含edu的请求<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            proxy_pass http:&#x2F;&#x2F;url:port;</span><br><span class="line">            index  index.html index.htm index.jsp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="参数说明："><a href="#参数说明：" class="headerlink" title="参数说明："></a>参数说明：</h3></li>
+<li>listen：该指令用于配置网络监听，有如下配置方式<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">listen *:80 | *:8080 #监听所有80端口和8080端口</span><br><span class="line">listen  IP_address:port   #监听指定的地址和端口号</span><br><span class="line">listen  IP_address     #监听指定ip地址所有端口</span><br><span class="line">listen port     #监听该端口的所有IP连接</span><br></pre></td></tr></table></figure></li>
+<li>server_name：用于配置基于名称的虚拟主机，有如下配置方式<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">server_name  www.zhangbaigao.com  精确匹配,可以配置多个用空格隔开</span><br><span class="line">server_name  *.zhangbaigao.com;   *通配符匹配</span><br><span class="line">server_name  ~^(?.+)\.zhangbaigao\.com$; 正则匹配.</span><br></pre></td></tr></table></figure></li>
+<li>location：该指令用于URL匹配</li>
 </ul>
-<h2 id="4-其他命令"><a href="#4-其他命令" class="headerlink" title="4.其他命令"></a>4.其他命令</h2><ul>
-<li>docker ps | grep nginx  查看nginx容器运行状态</li>
-<li>docker start mynginx   启动</li>
-<li>docker start mynginx   重启</li>
-<li>docker stop mynginx 暂停</li>
-<li>docker rm mynginx 移除</li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">location [ &#x3D; | ~ | ~* | ^~] uri &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#x3D; ：用于不含正则表达式的 uri 前，要求请求字符串与 uri 严格匹配，如果匹配成功，就停止继续向下搜索并立即处理该请求。</span><br><span class="line">~：用于表示 uri 包含正则表达式，并且区分大小写。</span><br><span class="line">~*：用于表示 uri 包含正则表达式，并且不区分大小写。</span><br><span class="line">^~：用于不含正则表达式的 uri 前，要求 Nginx 服务器找到标识 uri 和请求字符串匹配度最高的 location 后，立即使用此 location 处理请求，而不再使用 location 块中的正则 uri 和请求字符串做匹配。</span><br><span class="line">注意：如果 uri 包含正则表达式，则必须要有 ~ 或者 ~* 标识。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>proxy_pass:设置被代理服务器的地址</li>
+<li>index:网站的默认首页,可以写多个用空格隔开</li>
+</ul>
+<h2 id="2-负载均衡配置"><a href="#2-负载均衡配置" class="headerlink" title="2.负载均衡配置"></a>2.负载均衡配置</h2><ul>
+<li>在nginx.conf配置中添加与server同级的upstream配置,同时配置location：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">upstream zhangbgaigao &#123;</span><br><span class="line">	ip_hash;</span><br><span class="line">	server 127.0.0.1:8081 weight&#x3D;1;</span><br><span class="line">	server 127.0.0.1:8082 weight&#x3D;1;</span><br><span class="line">&#125;</span><br><span class="line">server&#123;</span><br><span class="line">	location &#x2F; &#123;</span><br><span class="line">   		proxy_pass http:&#x2F;&#x2F;zhangbgaigao;</span><br><span class="line">      proxy_connect_timeout 10;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="负载均衡策略"><a href="#负载均衡策略" class="headerlink" title="负载均衡策略"></a>负载均衡策略</h3></li>
+<li>轮询(默认):请求按时间逐一分配到不同的服务器，如果服务器down机了，自动剔除</li>
+<li>weight权重:默认为1，权重越高被分配的请求越多</li>
+<li>ip_hash:每个请求按ip的hash结果分配，同一个ip固定分配到一个服务器，可以解决session问题</li>
+<li>fair(第三方):按后端服务器的响应 时间来分配请求，响应时间短的优先分配</li>
 </ul>
 
     </div>
@@ -215,17 +222,11 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2020/03/22/Hexo%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE%E3%80%81%E5%88%86%E7%B1%BB%E3%80%81%E5%8F%91%E5%B8%83%E5%88%B0git/" class="pre-post btn btn-default" title='Hexo添加标签、分类、发布到git'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            Hexo添加标签、分类、发布到git</span>
-    </a>
     
-    
-    <a href="/2020/03/22/Nginx-%E7%AE%80%E4%BB%8B/" class="next-post btn btn-default" title='Nginx 配置详解'>
+    <a href="/2020/03/22/Hexo%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE%E3%80%81%E5%88%86%E7%B1%BB%E3%80%81%E5%8F%91%E5%B8%83%E5%88%B0git/" class="next-post btn btn-default" title='Hexo添加标签、分类、发布到git'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
-            Nginx 配置详解</span><i class="fa fa-angle-right fa-fw"></i>
+            Hexo添加标签、分类、发布到git</span><i class="fa fa-angle-right fa-fw"></i>
     </a>
     
 </div>
@@ -266,7 +267,7 @@ new Valine({
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-安装Nginx镜像"><span class="toc-text">1.安装Nginx镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-创建nginx-conf配置文件"><span class="toc-text">2.创建nginx.conf配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-创建Nginx容器"><span class="toc-text">3.创建Nginx容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-其他命令"><span class="toc-text">4.其他命令</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-反向代理配置"><span class="toc-text">1.反向代理配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参数说明："><span class="toc-text">参数说明：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-负载均衡配置"><span class="toc-text">2.负载均衡配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#负载均衡策略"><span class="toc-text">负载均衡策略</span></a></li></ol></li></ol>
         
     </div>
 </aside>
