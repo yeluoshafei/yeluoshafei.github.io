@@ -19,11 +19,14 @@
     <link rel="dns-prefetch" href="http://yoursite.com">
     <!--SEO-->
 
-<meta name="keywords" content="Nginx,Docker" />
+<meta name="keywords" content="Hexo" />
 
 
-<meta name="description" content="1.安装Nginx镜像1docker pull nginx
-2.创建nginx.conf配置文件1234567891011121314151617181920212223242526272829..." />
+<meta name="description" content="1.创建标签1$ hexo new page tags
+
+编辑index添加type: tags
+
+12345---title: 标签date: 2019-04-24 15:40:24type:..." />
 
 
 <meta name="robots" content="all" />
@@ -34,7 +37,7 @@
 
 <title>
     
-    Docker 部署 Nginx |
+    Hexo添加标签、分类、发布到git |
     
     Hexo
 </title>
@@ -124,16 +127,16 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="Docker 部署 Nginx">
+        <h1 id="Hexo添加标签、分类、发布到git">
             
-            Docker 部署 Nginx
+            Hexo添加标签、分类、发布到git
             
         </h1>
         <div class="post-meta">
     
     <span class="categories-meta fa-wrap">
         <i class="fa fa-folder-open-o"></i>
-        <a class="category-link" href="/categories/Nginx/">Nginx</a>
+        <a class="category-link" href="/categories/Hexo/">Hexo</a>
     </span>
     
     
@@ -141,7 +144,7 @@
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
             
-            <a class="tag-link" href="/tags/Docker/" rel="tag">Docker</a> <a class="tag-link" href="/tags/Nginx/" rel="tag">Nginx</a>
+            <a class="tag-link" href="/tags/Hexo/" rel="tag">Hexo</a>
             
         </span>
     </span>
@@ -166,20 +169,29 @@
     </div>
     
     <div class="post-body post-content">
-        <h2 id="1-安装Nginx镜像"><a href="#1-安装Nginx镜像" class="headerlink" title="1.安装Nginx镜像"></a>1.安装Nginx镜像</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nginx</span><br></pre></td></tr></table></figure>
-<h2 id="2-创建nginx-conf配置文件"><a href="#2-创建nginx-conf配置文件" class="headerlink" title="2.创建nginx.conf配置文件"></a>2.创建nginx.conf配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application&#x2F;octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line">    #gzip  on;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        # Vue路由模式为history需添加的配置</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            if (!-e $request_filename) &#123;</span><br><span class="line">                rewrite ^(.*)$ &#x2F;index.html?s&#x3D;$1 last;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            root   &#x2F;home&#x2F;nginx&#x2F;www;</span><br><span class="line">            index  index.html;</span><br><span class="line">        &#125;</span><br><span class="line">        # 获取真实IP以及Websocket需添加的配置</span><br><span class="line">        proxy_set_header Host $host;</span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header REMOTE-HOST $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_set_header Upgrade $http_upgrade;</span><br><span class="line">        proxy_set_header Connection &quot;upgrade&quot;;</span><br><span class="line">        # 客户端Body大小限制（文件上传大小限制配置）</span><br><span class="line">        client_max_body_size 5m;</span><br><span class="line">        error_page   500 502 503 504 404  &#x2F;50x.html;</span><br><span class="line">        location &#x3D; &#x2F;50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="3-创建Nginx容器"><a href="#3-创建Nginx容器" class="headerlink" title="3.创建Nginx容器"></a>3.创建Nginx容器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -d --name nginx -p 81:80 \</span><br><span class="line">-v &#x2F;home&#x2F;nginx&#x2F;conf&#x2F;nginx.conf:&#x2F;etc&#x2F;nginx&#x2F;nginx.conf \</span><br><span class="line">-v &#x2F;home&#x2F;nginx&#x2F;logs:&#x2F;var&#x2F;log&#x2F;nginx \</span><br><span class="line">-v &#x2F;home&#x2F;nginx&#x2F;www:&#x2F;home&#x2F;nginx&#x2F;www nginx</span><br></pre></td></tr></table></figure>
+        <h2 id="1-创建标签"><a href="#1-创建标签" class="headerlink" title="1.创建标签"></a>1.创建标签</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new page tags</span><br></pre></td></tr></table></figure>
 <ul>
-<li>/home/nginx/conf/nginx.conf  为刚才创建配置文件的路径</li>
-<li>/home/nginx/logs         日志保存的位置</li>
-<li>/home/nginx/www          跳转静态资源位置</li>
+<li>编辑index添加type: tags</li>
 </ul>
-<h2 id="4-其他命令"><a href="#4-其他命令" class="headerlink" title="4.其他命令"></a>4.其他命令</h2><ul>
-<li>docker ps | grep nginx  查看nginx容器运行状态</li>
-<li>docker start mynginx   启动</li>
-<li>docker start mynginx   重启</li>
-<li>docker stop mynginx 暂停</li>
-<li>docker rm mynginx 移除</li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 标签</span><br><span class="line">date: 2019-04-24 15:40:24</span><br><span class="line">type: tags</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<h2 id="2-给文章添加标签"><a href="#2-给文章添加标签" class="headerlink" title="2.给文章添加标签"></a>2.给文章添加标签</h2><ul>
+<li>编辑文章添加内容</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hexo 添加分类及标签</span><br><span class="line">date: 2019-04-24 15:40:24</span><br><span class="line">tags:[Nginx]</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<h2 id="3-创建分类"><a href="#3-创建分类" class="headerlink" title="3.创建分类"></a>3.创建分类</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new page categories</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编辑index添加type: “categories”</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 分类</span><br><span class="line">date: 2019-04-24 15:30:30</span><br><span class="line">type: categories</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<h2 id="4-给文章添加分类"><a href="#4-给文章添加分类" class="headerlink" title="4.给文章添加分类"></a>4.给文章添加分类</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hexo 添加分类及标签</span><br><span class="line">date: 2017-05-26 12:12:57</span><br><span class="line">categories: Hexo</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<h2 id="5-Hexo-Admin后台插件"><a href="#5-Hexo-Admin后台插件" class="headerlink" title="5.Hexo Admin后台插件"></a>5.Hexo Admin后台插件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-admin</span><br><span class="line">hexo server -d(开启hexo操作)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>打开<a href="http://IP:4000/admin" target="_blank" rel="noopener">http://IP:4000/admin</a> 就可以进入控制台</li>
+<li>posts 新建博客</li>
+<li>pages 页面</li>
+<li>deploy 将更新的博客发布到github<h2 id="6-提交到git"><a href="#6-提交到git" class="headerlink" title="6.提交到git"></a>6.提交到git</h2></li>
+<li>编辑根目录下_config.yml<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:自己的名称&#x2F;自己的名称.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g   这一步是生成静态页面</span><br><span class="line">hexo d   这个是部署到git上</span><br></pre></td></tr></table></figure></li>
 </ul>
 
     </div>
@@ -215,17 +227,11 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2020/03/22/Hexo%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE%E3%80%81%E5%88%86%E7%B1%BB%E3%80%81%E5%8F%91%E5%B8%83%E5%88%B0git/" class="pre-post btn btn-default" title='Hexo添加标签、分类、发布到git'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            Hexo添加标签、分类、发布到git</span>
-    </a>
     
-    
-    <a href="/2020/03/22/Nginx-%E7%AE%80%E4%BB%8B/" class="next-post btn btn-default" title='Nginx 配置详解'>
+    <a href="/2020/03/22/Docker-%E9%83%A8%E7%BD%B2-Nginx/" class="next-post btn btn-default" title='Docker 部署 Nginx'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
-            Nginx 配置详解</span><i class="fa fa-angle-right fa-fw"></i>
+            Docker 部署 Nginx</span><i class="fa fa-angle-right fa-fw"></i>
     </a>
     
 </div>
@@ -266,7 +272,7 @@ new Valine({
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-安装Nginx镜像"><span class="toc-text">1.安装Nginx镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-创建nginx-conf配置文件"><span class="toc-text">2.创建nginx.conf配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-创建Nginx容器"><span class="toc-text">3.创建Nginx容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-其他命令"><span class="toc-text">4.其他命令</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-创建标签"><span class="toc-text">1.创建标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-给文章添加标签"><span class="toc-text">2.给文章添加标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-创建分类"><span class="toc-text">3.创建分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-给文章添加分类"><span class="toc-text">4.给文章添加分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Hexo-Admin后台插件"><span class="toc-text">5.Hexo Admin后台插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-提交到git"><span class="toc-text">6.提交到git</span></a></li></ol>
         
     </div>
 </aside>
