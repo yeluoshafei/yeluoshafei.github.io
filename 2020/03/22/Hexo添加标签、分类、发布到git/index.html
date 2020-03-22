@@ -189,7 +189,9 @@
 <li>打开<a href="http://IP:4000/admin" target="_blank" rel="noopener">http://IP:4000/admin</a> 就可以进入控制台</li>
 <li>posts 新建博客</li>
 <li>pages 页面</li>
-<li>deploy 将更新的博客发布到github<h2 id="6-提交到git"><a href="#6-提交到git" class="headerlink" title="6.提交到git"></a>6.提交到git</h2></li>
+<li>deploy 将更新的博客发布到github</li>
+</ul>
+<h2 id="6-提交到git"><a href="#6-提交到git" class="headerlink" title="6.提交到git"></a>6.提交到git</h2><ul>
 <li>编辑根目录下_config.yml<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:自己的名称&#x2F;自己的名称.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g   这一步是生成静态页面</span><br><span class="line">hexo d   这个是部署到git上</span><br></pre></td></tr></table></figure></li>
 </ul>
