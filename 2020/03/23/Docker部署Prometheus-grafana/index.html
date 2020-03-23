@@ -191,7 +191,7 @@ job可以通过file_sd_configs方式挂载，也可以通过static_configs配置
 <li>官方支持：<a href="https://prometheus.io/download/" target="_blank" rel="noopener">https://prometheus.io/download/</a></li>
 <li>根据自己需求自行选择</li>
 </ul>
-<h2 id="3-Docker-promenade脚本"><a href="#3-Docker-promenade脚本" class="headerlink" title="3.Docker promenade脚本"></a>3.Docker promenade脚本</h2><ul>
+<h2 id="3-Docker-prometheus脚本"><a href="#3-Docker-prometheus脚本" class="headerlink" title="3.Docker prometheus脚本"></a>3.Docker prometheus脚本</h2><ul>
 <li>官方地址：<a href="https://prometheus.io/docs/prometheus/latest/installation/" target="_blank" rel="noopener">https://prometheus.io/docs/prometheus/latest/installation/</a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;bash</span><br><span class="line">docker stop prometheus</span><br><span class="line">docker rm prometheus</span><br><span class="line">docker run -d -p 9090:9090 --name prometheus -v &#x2F;volume&#x2F;prometheus&#x2F;prometheus.yml:&#x2F;etc&#x2F;prometheus&#x2F;prometheus.yml -v &#x2F;volume&#x2F;prometheus&#x2F;sd_config:&#x2F;etc&#x2F;prometheus&#x2F;sd_config prom&#x2F;prometheus</span><br></pre></td></tr></table></figure>
 
 </li>
@@ -304,7 +304,7 @@ new Valine({
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-新增prometheus-yml配置文件"><span class="toc-text">1.新增prometheus.yml配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-exporter插件"><span class="toc-text">2.exporter插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Docker-promenade脚本"><span class="toc-text">3.Docker promenade脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-踩坑说明"><span class="toc-text">4.踩坑说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-效果"><span class="toc-text">5.效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-运行Grafana"><span class="toc-text">6.运行Grafana</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-添加监控页面"><span class="toc-text">7.添加监控页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-最终界面展示"><span class="toc-text">8.最终界面展示</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-新增prometheus-yml配置文件"><span class="toc-text">1.新增prometheus.yml配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-exporter插件"><span class="toc-text">2.exporter插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Docker-prometheus脚本"><span class="toc-text">3.Docker prometheus脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-踩坑说明"><span class="toc-text">4.踩坑说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-效果"><span class="toc-text">5.效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-运行Grafana"><span class="toc-text">6.运行Grafana</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-添加监控页面"><span class="toc-text">7.添加监控页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-最终界面展示"><span class="toc-text">8.最终界面展示</span></a></li></ol>
         
     </div>
 </aside>
