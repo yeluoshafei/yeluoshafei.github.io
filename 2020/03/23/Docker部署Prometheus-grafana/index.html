@@ -1,0 +1,364 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="张白告的个人博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://yoursite.com">
+    <!--SEO-->
+
+<meta name="keywords" content="" />
+
+
+<meta name="description" content="1.新增prometheus.yml配置文件
+job可以通过file_sd_configs方式挂载，也可以通过static_configs配置
+
+123456789101112131415161..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    Docker部署Prometheus+grafana |
+    
+    张白告的个人博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="张白告的个人博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+
+
+
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  style="background-image:url(
+    http://snippet.shenliyang.com/img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='Zhang hao'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://yoursite.com">
+                        张白告的个人博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/Nginx/"><i class="fa "></i>
+                                Nginx</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Docker部署Prometheus+grafana">
+            
+            Docker部署Prometheus+grafana
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/03/23</span>
+    </span>
+    
+    <span class="fa-wrap">
+        <i class="fa fa-eye"></i>
+        <span id="busuanzi_value_page_pv"></span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="1-新增prometheus-yml配置文件"><a href="#1-新增prometheus-yml配置文件" class="headerlink" title="1.新增prometheus.yml配置文件"></a>1.新增prometheus.yml配置文件</h2><ul>
+<li>job可以通过file_sd_configs方式挂载，也可以通过static_configs配置</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">global:</span><br><span class="line">  scrape_interval: 15s</span><br><span class="line">  scrape_timeout: 10s</span><br><span class="line">  evaluation_interval: 1m</span><br><span class="line">  external_labels:</span><br><span class="line">    monitor: codelab-monitor</span><br><span class="line">scrape_configs:</span><br><span class="line">- job_name: prometheus</span><br><span class="line">  honor_timestamps: true</span><br><span class="line">  scrape_interval: 5s</span><br><span class="line">  scrape_timeout: 5s</span><br><span class="line">  metrics_path: &#x2F;metrics</span><br><span class="line">  scheme: http</span><br><span class="line">  static_configs:</span><br><span class="line">  - targets: [&#39;192.168.237.6:9090&#39;]</span><br><span class="line">- job_name: &#39;node&#39;</span><br><span class="line">  file_sd_configs:</span><br><span class="line">    - files: [&#39;&#x2F;etc&#x2F;prometheus&#x2F;sd_config&#x2F;node.yml&#39;]</span><br><span class="line">      refresh_interval: 5s</span><br><span class="line">- job_name: &#39;docker&#39;</span><br><span class="line">  static_configs:</span><br><span class="line">  - targets: [&#39;192.168.237.6:8080&#39;]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>file_sd_configs配置文件的格式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">targets:</span><br><span class="line">  - 192.168.237.6:9100</span><br></pre></td></tr></table></figure>
+<h2 id="2-exporter插件"><a href="#2-exporter插件" class="headerlink" title="2.exporter插件"></a>2.exporter插件</h2><ul>
+<li>cAdvisor：用于收集正在运行的容器资源使用和性能信息。</li>
+<li>git地址：<a href="https://github.com/google/cadvisor" target="_blank" rel="noopener">https://github.com/google/cadvisor</a></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;bash</span><br><span class="line">docker stop cadvisor</span><br><span class="line">docker rm cadvisor</span><br><span class="line">docker run \</span><br><span class="line">  --volume&#x3D;&#x2F;:&#x2F;rootfs:ro \</span><br><span class="line">  --volume&#x3D;&#x2F;var&#x2F;run:&#x2F;var&#x2F;run:ro \</span><br><span class="line">  --volume&#x3D;&#x2F;sys:&#x2F;sys:ro \</span><br><span class="line">  --volume&#x3D;&#x2F;var&#x2F;lib&#x2F;docker&#x2F;:&#x2F;var&#x2F;lib&#x2F;docker:ro \</span><br><span class="line">  --volume&#x3D;&#x2F;dev&#x2F;disk&#x2F;:&#x2F;dev&#x2F;disk:ro \</span><br><span class="line">  --publish&#x3D;8080:8080 \</span><br><span class="line">  --detach&#x3D;true \</span><br><span class="line">  --name&#x3D;cadvisor \</span><br><span class="line">  google&#x2F;cadvisor</span><br></pre></td></tr></table></figure>
+<ul>
+<li>node_exporter：用于Linux系统监控，使用Go语言编写的收集器。</li>
+<li>官方文档：<a href="https://prometheus.io/docs/guides/node-exporter/" target="_blank" rel="noopener">https://prometheus.io/docs/guides/node-exporter/</a></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;bash</span><br><span class="line">docker stop node-exporter</span><br><span class="line">docker rm node-exporter</span><br><span class="line">docker run -d     --name node-exporter  -p 9100:9100   -v &quot;&#x2F;proc:&#x2F;host&#x2F;proc:ro&quot;   -v &quot;&#x2F;sys:&#x2F;host&#x2F;sys:ro&quot;   -v &quot;&#x2F;:&#x2F;rootfs:ro&quot;   --restart&#x3D;always   --net&#x3D;&quot;host&quot;   prom&#x2F;node-exporter \</span><br><span class="line">--path.procfs &#x2F;host&#x2F;proc \</span><br><span class="line">--path.sysfs &#x2F;host&#x2F;sys \</span><br><span class="line">--collector.filesystem.ignored-mount-points &quot;^&#x2F;(sys|proc|dev|host|etc)($|&#x2F;)&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>其他exporter:<a href="https://prometheus.io/docs/instrumenting/exporters/" target="_blank" rel="noopener">https://prometheus.io/docs/instrumenting/exporters/</a></li>
+<li>官方支持：<a href="https://prometheus.io/download/" target="_blank" rel="noopener">https://prometheus.io/download/</a></li>
+<li>根据自己需求自行选择</li>
+</ul>
+<h2 id="3-Docker-promenade脚本"><a href="#3-Docker-promenade脚本" class="headerlink" title="3.Docker promenade脚本"></a>3.Docker promenade脚本</h2><ul>
+<li>官方地址：<a href="https://prometheus.io/docs/prometheus/latest/installation/" target="_blank" rel="noopener">https://prometheus.io/docs/prometheus/latest/installation/</a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;bash</span><br><span class="line">docker stop prometheus</span><br><span class="line">docker rm prometheus</span><br><span class="line">docker run -d -p 9090:9090 --name prometheus -v &#x2F;volume&#x2F;prometheus&#x2F;prometheus.yml:&#x2F;etc&#x2F;prometheus&#x2F;prometheus.yml -v &#x2F;volume&#x2F;prometheus&#x2F;sd_config:&#x2F;etc&#x2F;prometheus&#x2F;sd_config prom&#x2F;prometheus</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="4-踩坑说明"><a href="#4-踩坑说明" class="headerlink" title="4.踩坑说明"></a>4.踩坑说明</h2><ul>
+<li>若运行成功访问prometheus提示：</li>
+<li>Warning! Detected 545380.02 seconds time difference between your browser and the server. Prometheus relies on accurate time and time drift might cause unexpected query results.<img src="/images/pasted-2.png"></li>
+<li>则表示linux时间和本地机器时间不一致，更新linux时间即可<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">yum install -y ntpdate</span><br><span class="line">ntpdate 0.asia.pool.ntp.org</span><br><span class="line">其他可选地址:</span><br><span class="line">ime.nist.gov</span><br><span class="line">time.nuri.net</span><br><span class="line">0.asia.pool.ntp.org</span><br><span class="line">1.asia.pool.ntp.org</span><br><span class="line">2.asia.pool.ntp.org</span><br><span class="line">3.asia.pool.ntp.org</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="5-效果"><a href="#5-效果" class="headerlink" title="5.效果"></a>5.效果</h2><ul>
+<li>运行成功则会看到我们监控的节点<img src="/images/pasted-3.png">
+
+</li>
+</ul>
+<h2 id="6-运行Grafana"><a href="#6-运行Grafana" class="headerlink" title="6.运行Grafana"></a>6.运行Grafana</h2><ul>
+<li>官方地址：<a href="https://grafana.com/grafana/download?platform=docker" target="_blank" rel="noopener">https://grafana.com/grafana/download?platform=docker</a></li>
+<li>访问默认账户密码admin/admin，首次访问会要求修改密码<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name&#x3D;grafana -p 3000:3000 grafana&#x2F;grafana</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="7-添加监控页面"><a href="#7-添加监控页面" class="headerlink" title="7.添加监控页面"></a>7.添加监控页面</h2><ul>
+<li>Grafana提供了许多别人开发好的可视化界面，我们可以直接拿来使用</li>
+<li>地址：<a href="https://grafana.com/grafana/dashboards" target="_blank" rel="noopener">https://grafana.com/grafana/dashboards</a></li>
+<li>如监控linux我使用的是9276，cAdvisor使用的是193，这个数字是主题的id，在导入界面直接输入对应的id即可<img src="/images/pasted-4.png">
+
+</li>
+</ul>
+<h2 id="8-最终界面展示"><a href="#8-最终界面展示" class="headerlink" title="8.最终界面展示"></a>8.最终界面展示</h2><ul>
+<li>至此我们的Prometheus+grafana监控就完成了，运行效果如下，当然Prometheus还支持Alertmanager告警，已经k8s监控，后面会继续整理<img src="/images/pasted-5.png">
+<img src="/images/pasted-6.png"></li>
+</ul>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="../../../../img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        纵使晴明无雨色,入云深处亦沾衣
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">Snippet</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2020/03/23/Mysql-%E5%A4%9A%E8%A1%A8%E8%81%94%E3%80%81select%20into%E3%80%81select%20update%E5%90%88%E6%9B%B4%E6%96%B0/" class="next-post btn btn-default" title='Mysql 多表联合更新、select into、select update'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            Mysql 多表联合更新、select into、select update</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'id2WvCsbtm8PdFPm54O0NYiG-gzGzoHsz',
+    appKey: 'T4PENo9cfzugm0Ht6kYDFwUa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: false,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-CN'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-新增prometheus-yml配置文件"><span class="toc-text">1.新增prometheus.yml配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-exporter插件"><span class="toc-text">2.exporter插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Docker-promenade脚本"><span class="toc-text">3.Docker promenade脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-踩坑说明"><span class="toc-text">4.踩坑说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-效果"><span class="toc-text">5.效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-运行Grafana"><span class="toc-text">6.运行Grafana</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-添加监控页面"><span class="toc-text">7.添加监控页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-最终界面展示"><span class="toc-text">8.最终界面展示</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+    访问量:
+    <strong id="busuanzi_value_site_pv">
+        <i class="fa fa-spinner fa-spin"></i>
+    </strong>
+    &nbsp; | &nbsp;
+    访客数:
+    <strong id="busuanzi_value_site_uv">
+        <i class="fa fa-spinner fa-spin"></i>
+    </strong>
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2020s
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>
