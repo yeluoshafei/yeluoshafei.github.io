@@ -211,17 +211,21 @@ job可以通过file_sd_configs方式挂载，也可以通过static_configs配置
 <h2 id="6-运行Grafana"><a href="#6-运行Grafana" class="headerlink" title="6.运行Grafana"></a>6.运行Grafana</h2><ul>
 <li>官方地址：<a href="https://grafana.com/grafana/download?platform=docker" target="_blank" rel="noopener">https://grafana.com/grafana/download?platform=docker</a></li>
 <li>访问默认账户密码admin/admin，首次访问会要求修改密码<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name&#x3D;grafana -p 3000:3000 grafana&#x2F;grafana</span><br></pre></td></tr></table></figure>
-
-</li>
+<h2 id="7-添加Prometheus-数据源"><a href="#7-添加Prometheus-数据源" class="headerlink" title="7.添加Prometheus 数据源"></a>7.添加Prometheus 数据源</h2></li>
 </ul>
-<h2 id="7-添加监控页面"><a href="#7-添加监控页面" class="headerlink" title="7.添加监控页面"></a>7.添加监控页面</h2><ul>
+<img src="/images/pasted-7.png">
+* 选择Prometheus，填写正确的服务地址
+<img src="/images/pasted-8.png">
+
+
+<h2 id="8-添加监控页面"><a href="#8-添加监控页面" class="headerlink" title="8.添加监控页面"></a>8.添加监控页面</h2><ul>
 <li>Grafana提供了许多别人开发好的可视化界面，我们可以直接拿来使用</li>
 <li>地址：<a href="https://grafana.com/grafana/dashboards" target="_blank" rel="noopener">https://grafana.com/grafana/dashboards</a></li>
 <li>如监控linux我使用的是9276，cAdvisor使用的是193，这个数字是主题的id，在导入界面直接输入对应的id即可<img src="/images/pasted-4.png">
 
 </li>
 </ul>
-<h2 id="8-最终界面展示"><a href="#8-最终界面展示" class="headerlink" title="8.最终界面展示"></a>8.最终界面展示</h2><ul>
+<h2 id="9-最终界面展示"><a href="#9-最终界面展示" class="headerlink" title="9.最终界面展示"></a>9.最终界面展示</h2><ul>
 <li>至此我们的Prometheus+grafana监控就完成了，运行效果如下，当然Prometheus还支持Alertmanager告警，以及k8s监控，后面会继续整理<img src="/images/pasted-5.png">
 <img src="/images/pasted-6.png"></li>
 </ul>
@@ -304,7 +308,7 @@ new Valine({
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-新增prometheus-yml配置文件"><span class="toc-text">1.新增prometheus.yml配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-exporter插件"><span class="toc-text">2.exporter插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Docker-prometheus脚本"><span class="toc-text">3.Docker prometheus脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-踩坑说明"><span class="toc-text">4.踩坑说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-效果"><span class="toc-text">5.效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-运行Grafana"><span class="toc-text">6.运行Grafana</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-添加监控页面"><span class="toc-text">7.添加监控页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-最终界面展示"><span class="toc-text">8.最终界面展示</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-新增prometheus-yml配置文件"><span class="toc-text">1.新增prometheus.yml配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-exporter插件"><span class="toc-text">2.exporter插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Docker-prometheus脚本"><span class="toc-text">3.Docker prometheus脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-踩坑说明"><span class="toc-text">4.踩坑说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-效果"><span class="toc-text">5.效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-运行Grafana"><span class="toc-text">6.运行Grafana</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-添加Prometheus-数据源"><span class="toc-text">7.添加Prometheus 数据源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-添加监控页面"><span class="toc-text">8.添加监控页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-最终界面展示"><span class="toc-text">9.最终界面展示</span></a></li></ol>
         
     </div>
 </aside>
