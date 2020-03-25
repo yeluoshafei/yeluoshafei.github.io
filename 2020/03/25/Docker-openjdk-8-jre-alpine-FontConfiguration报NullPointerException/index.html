@@ -1,0 +1,310 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="张白告的个人博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://yoursite.com">
+    <!--SEO-->
+
+<meta name="keywords" content="Docker,Java" />
+
+
+<meta name="description" content="1.异常触发情况
+本地使用Java8 生成验证码图片传给前端，本地调试没任何问题，但是部署到测试该接口就会报如下错误，而本地与测试唯一不同的就是，测试时使用Docker并且基础镜像是openjd..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    Docker openjdk:8-jre-alpine FontConfiguration报NullPointerException |
+    
+    张白告的个人博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="张白告的个人博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+
+
+
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  style="background-image:url(
+    http://snippet.shenliyang.com/img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='Zhang hao'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://yoursite.com">
+                        张白告的个人博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Docker openjdk:8-jre-alpine FontConfiguration报NullPointerException">
+            
+            Docker openjdk:8-jre-alpine FontConfiguration报NullPointerException
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Docker/">Docker</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Docker/" rel="tag">Docker</a> <a class="tag-link" href="/tags/Java/" rel="tag">Java</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/03/25</span>
+    </span>
+    
+    <span class="fa-wrap">
+        <i class="fa fa-eye"></i>
+        <span id="busuanzi_value_page_pv"></span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="1-异常触发情况"><a href="#1-异常触发情况" class="headerlink" title="1.异常触发情况"></a>1.异常触发情况</h2><ul>
+<li>本地使用Java8 生成验证码图片传给前端，本地调试没任何问题，但是部署到测试该接口就会报如下错误，而本地与测试唯一不同的就是，测试时使用Docker并且基础镜像是openjdk:8-jre-alpine，最后通过查阅资料了解到是Alpine缺少字体相关的包导致的</li>
+<li>git上也有相关的issue：<a href="https://github.com/docker-library/openjdk/issues/73" target="_blank" rel="noopener">https://github.com/docker-library/openjdk/issues/73</a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line">ERROR 1 --- [  XNIO-2 task-5] c.o.t.controller.ExceptionController     : java.lang.NullPointerException</span><br><span class="line">	at sun.awt.FontConfiguration.getVersion(FontConfiguration.java:1264)</span><br><span class="line">	at sun.awt.FontConfiguration.readFontConfigFile(FontConfiguration.java:219)</span><br><span class="line">	at sun.awt.FontConfiguration.init(FontConfiguration.java:107)</span><br><span class="line">	at sun.awt.X11FontManager.createFontConfiguration(X11FontManager.java:774)</span><br><span class="line">	at sun.font.SunFontManager$2.run(SunFontManager.java:431)</span><br><span class="line">	at java.security.AccessController.doPrivileged(Native Method)</span><br><span class="line">	at sun.font.SunFontManager.&lt;init&gt;(SunFontManager.java:376)</span><br><span class="line">	at sun.awt.FcFontManager.&lt;init&gt;(FcFontManager.java:35)</span><br><span class="line">	at sun.awt.X11FontManager.&lt;init&gt;(X11FontManager.java:57)</span><br><span class="line">	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)</span><br><span class="line">	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)</span><br><span class="line">	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)</span><br><span class="line">	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)</span><br><span class="line">	at java.lang.Class.newInstance(Class.java:442)</span><br><span class="line">	at sun.font.FontManagerFactory$1.run(FontManagerFactory.java:83)</span><br><span class="line">	at java.security.AccessController.doPrivileged(Native Method)</span><br><span class="line">	at sun.font.FontManagerFactory.getInstance(FontManagerFactory.java:74)</span><br><span class="line">	at java.awt.Font.getFont2D(Font.java:491)</span><br><span class="line">	at java.awt.Font.access$000(Font.java:224)</span><br><span class="line">	at java.awt.Font$FontAccessImpl.getFont2D(Font.java:228)</span><br><span class="line">	at sun.font.FontUtilities.getFont2D(FontUtilities.java:180)</span><br><span class="line">	at sun.java2d.SunGraphics2D.checkFontInfo(SunGraphics2D.java:670)</span><br><span class="line">	at sun.java2d.SunGraphics2D.getFontInfo(SunGraphics2D.java:831)</span><br><span class="line">	at sun.java2d.pipe.GlyphListPipe.drawString(GlyphListPipe.java:50)</span><br><span class="line">	at sun.java2d.SunGraphics2D.drawString(SunGraphics2D.java:2926)</span><br><span class="line">	at com.oczhkj.train.util.ImgValidateCodeUtil.drawString(ImgValidateCodeUtil.java:92)</span><br><span class="line">	at com.oczhkj.train.util.ImgValidateCodeUtil.getImgCodeBaseCode(ImgValidateCodeUtil.java:119)</span><br><span class="line">	at com.oczhkj.train.service.impl.UserServiceImpl.getRandomCode(UserServiceImpl.java:112)</span><br><span class="line">	at com.oczhkj.train.service.impl.UserServiceImpl$$FastClassBySpringCGLIB$$8b28c57b.invoke(&lt;generated&gt;)</span><br><span class="line">	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:204)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:684)</span><br><span class="line">	at com.oczhkj.train.service.impl.UserServiceImpl$$EnhancerBySpringCGLIB$$76a80bc6.getRandomCode(&lt;generated&gt;)</span><br><span class="line">	at com.oczhkj.train.controller.UserController.getCode(UserController.java:45)</span><br><span class="line">	at com.oczhkj.train.controller.UserController$$FastClassBySpringCGLIB$$c8905613.invoke(&lt;generated&gt;)</span><br><span class="line">	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:204)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:746)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)</span><br><span class="line">	at org.springframework.aop.framework.adapter.MethodBeforeAdviceInterceptor.invoke(MethodBeforeAdviceInterceptor.java:56)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)</span><br><span class="line">	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:88)</span><br><span class="line">	at com.oczhkj.train.aop.WebLogAspect.doAround(WebLogAspect.java:49)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">	at java.lang.reflect.Method.invoke(Method.java:498)</span><br><span class="line">	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:644)</span><br><span class="line">	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:633)</span><br><span class="line">	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:70)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)</span><br><span class="line">	at org.springframework.aop.framework.adapter.AfterReturningAdviceInterceptor.invoke(AfterReturningAdviceInterceptor.java:55)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)</span><br><span class="line">	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:92)</span><br><span class="line">	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)</span><br><span class="line">	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:688)</span><br><span class="line">	at com.oczhkj.train.controller.UserController$$EnhancerBySpringCGLIB$$d355a0b7.getCode(&lt;generated&gt;)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">	at java.lang.reflect.Method.invoke(Method.java:498)</span><br><span class="line">	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:209)</span><br><span class="line">	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:877)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:783)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)</span><br><span class="line">	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:991)</span><br><span class="line">	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:925)</span><br><span class="line">	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:974)</span><br><span class="line">	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:866)</span><br><span class="line">	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)</span><br><span class="line">	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:851)</span><br><span class="line">	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletHandler.handleRequest(ServletHandler.java:74)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:129)</span><br><span class="line">	at com.alibaba.druid.support.http.WebStatFilter.doFilter(WebStatFilter.java:123)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:61)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:131)</span><br><span class="line">	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:61)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:131)</span><br><span class="line">	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:109)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:61)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:131)</span><br><span class="line">	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:61)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:131)</span><br><span class="line">	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:61)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:131)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler.handleRequest(FilterHandler.java:84)</span><br><span class="line">	at io.undertow.servlet.handlers.security.ServletSecurityRoleHandler.handleRequest(ServletSecurityRoleHandler.java:62)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletChain$1.handleRequest(ServletChain.java:64)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletDispatchingHandler.handleRequest(ServletDispatchingHandler.java:36)</span><br><span class="line">	at io.undertow.servlet.handlers.security.SSLInformationAssociationHandler.handleRequest(SSLInformationAssociationHandler.java:132)</span><br><span class="line">	at io.undertow.servlet.handlers.security.ServletAuthenticationCallHandler.handleRequest(ServletAuthenticationCallHandler.java:57)</span><br><span class="line">	at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:43)</span><br><span class="line">	at io.undertow.security.handlers.AbstractConfidentialityHandler.handleRequest(AbstractConfidentialityHandler.java:46)</span><br><span class="line">	at io.undertow.servlet.handlers.security.ServletConfidentialityConstraintHandler.handleRequest(ServletConfidentialityConstraintHandler.java:64)</span><br><span class="line">	at io.undertow.security.handlers.AuthenticationMechanismsHandler.handleRequest(AuthenticationMechanismsHandler.java:60)</span><br><span class="line">	at io.undertow.servlet.handlers.security.CachedAuthenticatedSessionHandler.handleRequest(CachedAuthenticatedSessionHandler.java:77)</span><br><span class="line">	at io.undertow.security.handlers.AbstractSecurityContextAssociationHandler.handleRequest(AbstractSecurityContextAssociationHandler.java:43)</span><br><span class="line">	at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:43)</span><br><span class="line">	at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:43)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler.handleFirstRequest(ServletInitialHandler.java:292)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler.access$100(ServletInitialHandler.java:81)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler$2.call(ServletInitialHandler.java:138)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler$2.call(ServletInitialHandler.java:135)</span><br><span class="line">	at io.undertow.servlet.core.ServletRequestContextThreadSetupAction$1.call(ServletRequestContextThreadSetupAction.java:48)</span><br><span class="line">	at io.undertow.servlet.core.ContextClassLoaderSetupAction$1.call(ContextClassLoaderSetupAction.java:43)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler.dispatchRequest(ServletInitialHandler.java:272)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler.access$000(ServletInitialHandler.java:81)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler$1.handleRequest(ServletInitialHandler.java:104)</span><br><span class="line">	at io.undertow.server.Connectors.executeRootHandler(Connectors.java:336)</span><br><span class="line">	at io.undertow.server.HttpServerExchange$1.run(HttpServerExchange.java:830)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)</span><br></pre></td></tr></table></figure>
+<h2 id="2-解决方案"><a href="#2-解决方案" class="headerlink" title="2.解决方案"></a>2.解决方案</h2></li>
+<li>在基础镜像里面安装ttf-dejavu，然后就可以了</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FROM java:8-jre-alpine</span><br><span class="line"># Install cURL</span><br><span class="line">RUN echo -e &quot;https:&#x2F;&#x2F;mirror.tuna.tsinghua.edu.cn&#x2F;alpine&#x2F;v3.4&#x2F;main\n\</span><br><span class="line">https:&#x2F;&#x2F;mirror.tuna.tsinghua.edu.cn&#x2F;alpine&#x2F;v3.4&#x2F;community&quot; &gt; &#x2F;etc&#x2F;apk&#x2F;repositories</span><br><span class="line"></span><br><span class="line">RUN apk --update add curl bash ttf-dejavu &amp;&amp; \</span><br><span class="line">      rm -rf &#x2F;var&#x2F;cache&#x2F;apk&#x2F;*</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t docker.io&#x2F;java-font:8-jre-alpine .</span><br></pre></td></tr></table></figure>
+<ul>
+<li>最后构建我们自己项目的时候以此镜像为基础镜像即可</li>
+</ul>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="../../../../img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        纵使晴明无雨色,入云深处亦沾衣
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">ZhangBaiGao</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2020/03/23/Docker%E9%83%A8%E7%BD%B2Prometheus-grafana/" class="next-post btn btn-default" title='Docker部署Prometheus+grafana'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            Docker部署Prometheus+grafana</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'id2WvCsbtm8PdFPm54O0NYiG-gzGzoHsz',
+    appKey: 'T4PENo9cfzugm0Ht6kYDFwUa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: false,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-CN'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-异常触发情况"><span class="toc-text">1.异常触发情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-解决方案"><span class="toc-text">2.解决方案</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+    访问量:
+    <strong id="busuanzi_value_site_pv">
+        <i class="fa fa-spinner fa-spin"></i>
+    </strong>
+    &nbsp; | &nbsp;
+    访客数:
+    <strong id="busuanzi_value_site_uv">
+        <i class="fa fa-spinner fa-spin"></i>
+    </strong>
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2020
+                    
+                </span>  
+                <span>
+                    Zhang bai gao
+                </span> 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>
