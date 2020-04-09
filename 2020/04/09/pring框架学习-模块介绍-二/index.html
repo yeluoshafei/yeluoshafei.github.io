@@ -1,0 +1,337 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="张白告的个人博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://yoursite.com">
+    <!--SEO-->
+
+<meta name="keywords" content="Spring" />
+
+
+<meta name="description" content="1.Spring Framework模块结构图
+
+2.核心模块
+spring-core: 依赖注入IOC与DI的最基本实现,基础 API 模块,如资源管理,泛型处理spring-beans: B..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    Spring框架学习-模块介绍(二) |
+    
+    张白告的个人博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="张白告的个人博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+
+
+
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  style="background-image:url(
+    http://snippet.shenliyang.com/img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='Zhang hao'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://yoursite.com">
+                        张白告的个人博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/Spring/"><i class="fa "></i>
+                                Spring框架</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Spring框架学习-模块介绍(二)">
+            
+            Spring框架学习-模块介绍(二)
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/Spring/">Spring</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/Spring/" rel="tag">Spring</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/04/09</span>
+    </span>
+    
+    <span class="fa-wrap">
+        <i class="fa fa-eye"></i>
+        <span id="busuanzi_value_page_pv"></span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="1-Spring-Framework模块结构图"><a href="#1-Spring-Framework模块结构图" class="headerlink" title="1.Spring Framework模块结构图"></a>1.Spring Framework模块结构图</h2><img src="/images/pasted-9.png">
+
+<h2 id="2-核心模块"><a href="#2-核心模块" class="headerlink" title="2.核心模块"></a>2.核心模块</h2><blockquote>
+<p><strong>spring-core:</strong> 依赖注入IOC与DI的最基本实现,基础 API 模块,如资源管理,泛型处理<br><strong>spring-beans:</strong> Bean工厂与Bean的装配,依赖查找,依赖注入</p>
+</blockquote>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;spring-beans 和 spring-core 模块是 Spring 框架的核心模块,包含了控制反转(Inversion of Control, IOC)和依赖注入(Dependency Injection, DI)。BeanFactory 接口是 Spring 框架中的核心接口,它是工厂模式的具体实现。<br>&nbsp;&nbsp;&nbsp;&nbsp;BeanFactory 使用控制反转对应用程序的配置和依赖性规范与实际的应用程序代码进行了分离。但 BeanFactory 容器实例化后并不会自动实例化 Bean,只有当 Bean被使用时BeanFactory 容器才会对该 Bean 进行实例化与依赖关系的装配。</p>
+<blockquote>
+<p><strong>spring-context:</strong> 定义基础的Spring的Context上下文即IOC容器,以及事件驱动、注解驱动,模块驱动等</p>
+</blockquote>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;扩展了 BeanFactory,为她添加了 Bean 生命周期控制、框架事件体系以及资源加载透明化等功能。此外该模块还提供了许多企业级支持,如邮件访问、远程访问、任务调度等,ApplicationContext 是该模块的核心接口,她是 BeanFactory 的超类,与BeanFactory 不同,ApplicationContext 容器实例化后会自动对所有的单实例 Bean 进行实例化与依赖关系的装配,使之处于待用状态。</p>
+<blockquote>
+<p><strong>spring-context-support:</strong> 对Spring IOC容器的扩展支持<br><strong>spring-context-indexer:</strong> Spring的类管理组件和Classpath扫描<br><strong>spring-expression:</strong> 是统一表达式语言(EL)的扩展模块,可以查询、管理运行中的对象,同时也方便的可以调用对象方法、操作数组、集合等。它的语法类似于传统 EL,但提供了额外的功能,最出色的要数函数调用和简单字符串的模板函数。这种语言的特性是基于 Spring 产品的需求而设计,他可以非常方便地同 Spring IOC 进行交互。</p>
+</blockquote>
+<h2 id="3-切面编程"><a href="#3-切面编程" class="headerlink" title="3.切面编程"></a>3.切面编程</h2><blockquote>
+<p><strong>spring-aop:</strong> 面向切面编程的应用模块,整合Asm,CGLIb、JDKProxy以JVM的动态代理技术为基础,然后设计出了一系列的 AOP 横切实现,比如前置通知、返回通知、异常通知等,同时,Pointcut 接口来匹配切入点,可以使用现有的切入点来设计横切面,也可以扩展相关方法根据需求进行切入。<br><strong>spring-aspects:</strong> 集成AspectJ,AOP应用框架，为 Spring AOP 提供多种 AOP 实现方法。<br><strong>spring-instrument:</strong> 动态Class Loading模块,主要作用是在 JVM 启用时,生成一个代理类,程序员通过代理类在运行时修改类的字节,从而改变一个类的功能,实现 AOP 的功能。</p>
+</blockquote>
+<h2 id="4-数据访问与集成"><a href="#4-数据访问与集成" class="headerlink" title="4.数据访问与集成"></a>4.数据访问与集成</h2><blockquote>
+<p><strong>spring-jdbc:</strong> Spring 提供的JDBC抽象框架的主要实现模块,用于简化Spring JDBC操作,主要是提供 JDBC 模板方式、关系数据库对象化方式、SimpleJdbc 方式、事务管理来简化 JDBC 编程,主要实现类是 JdbcTemplate、SimpleJdbcTemplate 以及 NamedParameterJdbcTemplate。<br><strong>spring-tx:</strong> Spring JDBC事务控制实现模块<br><strong>spring-orm:</strong> ORM 框架支持模块,主要集成 Hibernate, Java Persistence API (JPA) 和Java Data Objects (JDO) 用于资源管理、数据访问对象(DAO)的实现和事务策略。<br><strong>spring-oxm:</strong> (Object-to-XML-Mapping)将Java对象映射成XML数据,或者将XML数据映射成Java对象<br><strong>spring-jms:</strong> Java Messaging Service能够发送和接收信息</p>
+</blockquote>
+<h2 id="5-web组件"><a href="#5-web组件" class="headerlink" title="5.web组件"></a>5.web组件</h2><blockquote>
+<p><strong>spring-web:</strong> 提供了最基础Web支持,主要建立于核心容器之上,通过Servlet或者Listeners来初始化IOC容器。<br><strong>spring-webmvc:</strong> 实现了Spring MVC(model-view-Controller)的Web应用。<br><strong>spring-websocket:</strong> 主要是与Web前端的全双工通讯的协议。<br><strong>spring-webflux:</strong> 一个新的非堵塞函数式 Reactive Web 框架,可以用来建立异步的,非阻塞,事件驱动的服务。</p>
+</blockquote>
+<h2 id="6-通信报文"><a href="#6-通信报文" class="headerlink" title="6.通信报文"></a>6.通信报文</h2><blockquote>
+<p><strong>spring-messaging:</strong> 从Spring4开始新加入的一个模块,主要职责是为Spring 框架集成一些基础的报文传送应用。</p>
+</blockquote>
+<h2 id="7-集成测试"><a href="#7-集成测试" class="headerlink" title="7.集成测试"></a>7.集成测试</h2><blockquote>
+<p><strong>spring-test:</strong> 主要为测试提供支持的。</p>
+</blockquote>
+<h2 id="8-日志适配"><a href="#8-日志适配" class="headerlink" title="8.日志适配"></a>8.日志适配</h2><blockquote>
+<p><strong>spring-jcl:</strong> 通过适配器设计模式实现的一个用来统一管理日志的框架，对外体统统一的接口，采用”适配器类”将日志的操作全部委托给具体的日志框架，提供了对多种日志框架的支持。</p>
+</blockquote>
+<h2 id="9-模块之间的依赖关系"><a href="#9-模块之间的依赖关系" class="headerlink" title="9.模块之间的依赖关系"></a>9.模块之间的依赖关系</h2><img src="/images/pasted-10.png">
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="../../../../img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        纵使晴明无雨色,入云深处亦沾衣
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">ZhangBaiGao</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+    <a href="/2020/04/09/-Spring%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0-%E6%A6%82%E8%BF%B0-%E4%B8%80/" class="next-post btn btn-default" title='Spring框架学习-概述(一)'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            Spring框架学习-概述(一)</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'id2WvCsbtm8PdFPm54O0NYiG-gzGzoHsz',
+    appKey: 'T4PENo9cfzugm0Ht6kYDFwUa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: false,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-CN'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Spring-Framework模块结构图"><span class="toc-text">1.Spring Framework模块结构图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-核心模块"><span class="toc-text">2.核心模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-切面编程"><span class="toc-text">3.切面编程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-数据访问与集成"><span class="toc-text">4.数据访问与集成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-web组件"><span class="toc-text">5.web组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-通信报文"><span class="toc-text">6.通信报文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-集成测试"><span class="toc-text">7.集成测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-日志适配"><span class="toc-text">8.日志适配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-模块之间的依赖关系"><span class="toc-text">9.模块之间的依赖关系</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+    访问量:
+    <strong id="busuanzi_value_site_pv">
+        <i class="fa fa-spinner fa-spin"></i>
+    </strong>
+    &nbsp; | &nbsp;
+    访客数:
+    <strong id="busuanzi_value_site_uv">
+        <i class="fa fa-spinner fa-spin"></i>
+    </strong>
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2020
+                    
+                </span>  
+                <span>
+                    Zhang bai gao
+                </span> 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>
