@@ -1,0 +1,321 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="张白告的个人博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.3">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://yoursite.com">
+    <!--SEO-->
+
+<meta name="keywords" content="设计原则" />
+
+
+<meta name="description" content="1.概述
+得墨忒耳定律（Law of Demeter，缩写LoD）亦被称作“最少知识原则（Principle of Least Knowledge）”，是一种软件开发的设计指导原则，特别是面向对..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    软件架构设计之－迪米特法则 |
+    
+    张白告的个人博客
+</title>
+
+<link rel="alternate" href="/atom.xml" title="张白告的个人博客" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+
+
+
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  style="background-image:url(
+    http://snippet.shenliyang.com/img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='Zhang hao'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://yoursite.com">
+                        张白告的个人博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/Spring/"><i class="fa "></i>
+                                Spring框架</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/程序设计/"><i class="fa "></i>
+                                程序设计</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                时间轴</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="软件架构设计之－迪米特法则">
+            
+            软件架构设计之－迪米特法则
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">程序设计</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-link" href="/tags/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" rel="tag">设计原则</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2020/04/11</span>
+    </span>
+    
+    
+</div>
+        
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h2><blockquote>
+<p>得墨忒耳定律（Law of Demeter，缩写LoD）亦被称作“最少知识原则（Principle of Least Knowledge）”，是一种软件开发的设计指导原则，特别是面向对象的程序设计。得墨忒耳定律是松耦合的一种具体案例。</p>
+</blockquote>
+<p>该原则是美国东北大学在1987年末在发明的，可以简单地以下面任一种方式总结:</p>
+<ul>
+<li>每个单元对于其他的单元只能拥有有限的知识：只是与当前单元紧密联系的单元；</li>
+<li>每个单元只能和它的朋友交谈：不能和陌生单元交谈；</li>
+<li>只和自己直接的朋友交谈。</li>
+</ul>
+<p>这个原理的名称来源于希腊神话中的农业女神，孤独的得墨忒耳。<br>很多面向对象程序设计语言用”.”表示对象的域的解析算符，因此得墨忒耳定律可以简单地陈述为“只使用一个.算符”。因此，a.b.Method()违反了此定律，而a.Method()不违反此定律。一个简单例子是，人可以命令一条狗行走（walk），但是不应该直接指挥狗的腿行走，应该由狗去指挥控制它的腿如何行走。</p>
+<p>得墨忒耳定律使得软件更好的可维护性与适应性。因为对象较少依赖其它对象的内部结构，可以改变对象容器（container）而不用改变它的调用者（caller）。</p>
+<h2 id="2-示例"><a href="#2-示例" class="headerlink" title="2.示例"></a>2.示例</h2><p>现在来设计一个权限系统，Boss 需要查看目前发布到线上的课程数量。这时候，Boss要找到 TeamLeader 去进行统计，TeamLeader 再把统计结果告诉 Boss。接下来我们还是来看代码：<br>Course 类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Course</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">TeamLeader 类：</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TeamLeader</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">checkNumberOfCourses</span><span class="params">(List&lt;Course&gt; courseList)</span></span>&#123;</span><br><span class="line">  	System.out.println(<span class="string">"目前已发布的课程数量是："</span>+courseList.size());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Boss 类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Boss</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">commandCheckNumber</span><span class="params">(TeamLeader teamLeader)</span></span>&#123;</span><br><span class="line">  <span class="comment">//模拟 Boss 一页一页往下翻页，TeamLeader 实时统计</span></span><br><span class="line">  List&lt;Course&gt; courseList = <span class="keyword">new</span> ArrayList&lt;Course&gt;();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i= <span class="number">0</span>; i &lt; <span class="number">20</span> ;i ++)&#123;</span><br><span class="line">  	courseList.add(<span class="keyword">new</span> Course());</span><br><span class="line">  &#125;</span><br><span class="line">  teamLeader.checkNumberOfCourses(courseList);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  Boss boss = <span class="keyword">new</span> Boss();</span><br><span class="line">  TeamLeader teamLeader = <span class="keyword">new</span> TeamLeader();</span><br><span class="line">  boss.commandCheckNumber(teamLeader);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>写到这里，其实功能已经都已经实现，代码看上去也没什么问题。根据迪米特原则，Boss<br>只想要结果，不需要跟 Course 产生直接的交流。而 TeamLeader 统计需要引用 Course<br>对象。Boss 和 Course 并不是朋友，从下面的类图就可以看出来：<br><img src="/images/pasted-18.png"><br>下面来对代码进行改造：<br>TeamLeader 类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TeamLeader</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">checkNumberOfCourses</span><span class="params">()</span></span>&#123;</span><br><span class="line">  List&lt;Course&gt; courseList = <span class="keyword">new</span> ArrayList&lt;Course&gt;();</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ;i &lt; <span class="number">20</span>;i++)&#123;</span><br><span class="line">  	courseList.add(<span class="keyword">new</span> Course());</span><br><span class="line">  &#125;</span><br><span class="line">  System.out.println(<span class="string">"目前已发布的课程数量是："</span>+courseList.size());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Boss 类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Boss</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">commandCheckNumber</span><span class="params">(TeamLeader teamLeader)</span></span>&#123;</span><br><span class="line">  teamLeader.checkNumberOfCourses();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再来看下面的类图，Course 和 Boss 已经没有关联了。<br><img src="/images/pasted-19.png"></p>
+
+    </div>
+    
+    <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+            
+            <span class="reward-type">
+                <img class="wechat" src="../../../../img/reward-wepay.jpg"><b>微信打赏</b>
+            </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">
+        纵使晴明无雨色,入云深处亦沾衣
+    </p>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+            文章声明：
+            文章部分内容源于网络，如有侵权请联系删除 © <a href="" target="_blank">ZhangBaiGao</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2020/04/11/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B9%8B%EF%BC%8D%E9%87%8C%E6%B0%8F%E6%9B%BF%E6%8D%A2%E5%8E%9F%E5%88%99/" class="pre-post btn btn-default" title='软件架构设计之－里氏替换原则'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            软件架构设计之－里氏替换原则</span>
+    </a>
+    
+    
+    <a href="/2020/04/10/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B9%8B%EF%BC%8D%E6%8E%A5%E5%8F%A3%E9%9A%94%E7%A6%BB%E5%8E%9F%E5%88%99/" class="next-post btn btn-default" title='软件架构设计之－接口隔离原则'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            软件架构设计之－接口隔离原则</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+
+<div id="vcomments" class="valine"></div>
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+<script>
+new Valine({
+    av: AV,
+    el: '#vcomments',
+    appId: 'id2WvCsbtm8PdFPm54O0NYiG-gzGzoHsz',
+    appKey: 'T4PENo9cfzugm0Ht6kYDFwUa',
+    placeholder: '说点什么吧',
+    notify: false,
+    verify: false,
+    avatar: 'mm',
+    meta: 'nick,mail'.split(','),
+    pageSize: '10',
+    path: window.location.pathname,
+    lang: 'zh-CN'.toLowerCase()
+})
+</script>
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-概述"><span class="toc-text">1.概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-示例"><span class="toc-text">2.示例</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2020
+                    
+                </span>  
+                <span>
+                    Zhang bai gao
+                </span> 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>
